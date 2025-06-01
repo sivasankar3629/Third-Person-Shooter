@@ -1,0 +1,119 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class Player : MonoBehaviour
+{
+    [Header("References")]
+    [SerializeField] CharacterController _controller;
+    [SerializeField] Transform _groundCheckTransform;
+    private PlayerInputs _inputActions;
+    [SerializeField] Camera _cam;
+
+    [Header("Player Settings")]
+    [SerializeField] float _walkSpeed = 3;
+    [SerializeField] float _runSpeed = 6;
+    [SerializeField] float _jumpHeight= 3;
+    [SerializeField] float _gravity = 9.81f;
+    [SerializeField] float _turnSpeed = 3;
+
+    private Vector3 _inputs;
+    private Vector3 _moveDirection;
+
+    #region LifeCycle
+
+    private void Awake()
+    {
+        _inputActions = new PlayerInputs();
+        _inputActions.BasicMovement.Enable();
+    }
+
+    private void OnEnable()
+    {
+        _inputActions.BasicMovement.Jump.started += Jump;
+        _inputActions.BasicMovement.Attack.started += Attack;
+    }
+
+
+    private void FixedUpdate()
+    {
+        Movement();
+        Gravity();
+        PlayerRotation();
+
+        _controller.Move(_moveDirection * Time.deltaTime);
+    }
+
+    private void OnDisable()
+    {
+        _inputActions.BasicMovement.Jump.started -= Jump;
+        _inputActions.BasicMovement.Attack.started -= Attack;
+    }
+
+    #endregion
+
+    private void Movement()
+    {
+        if (_inputActions.BasicMovement.Move.IsPressed())
+        {
+            Move();
+        }
+        else
+        {
+            _moveDirection.x = 0;
+            _moveDirection.z = 0;
+        }
+    }
+
+    private void Move()
+    {
+        _inputs.z = _inputActions.BasicMovement.Move.ReadValue<Vector2>().y;
+        _inputs.x = _inputActions.BasicMovement.Move.ReadValue<Vector2>().x;
+
+        if (_inputActions.BasicMovement.Run.IsPressed())
+        {
+            _moveDirection = (transform.right * _inputs.x + transform.forward * _inputs.z + transform.up * _inputs.y) * _runSpeed;
+        }
+        else
+        {
+            _moveDirection = (transform.right * _inputs.x + transform.forward * _inputs.z + transform.up * _inputs.y) * _walkSpeed;
+        }
+    }
+
+    private void Jump(InputAction.CallbackContext callback)
+    {
+        Debug.Log(transform.up);
+        if (IsGrounded())
+        {
+            _inputs.y = Mathf.Sqrt(_jumpHeight * _gravity);
+            Debug.Log(_inputs.y);
+        }
+    }
+
+    private void Gravity()
+    {
+        if (IsGrounded())
+        {
+            _moveDirection.y = -2f;
+        }
+        else
+        {
+            _moveDirection.y -= 9.81f * Time.deltaTime  ;
+        }
+    }
+
+    private bool IsGrounded()
+    {
+        return Physics.CheckSphere(_groundCheckTransform.position, 0.1f, LayerMask.NameToLayer("Player"), QueryTriggerInteraction.Ignore);
+    }
+
+    private void Attack(InputAction.CallbackContext callback)
+    {
+        Debug.Log("Attack");
+    }
+
+    void PlayerRotation()
+    {
+        float camRotation = _cam.transform.rotation.eulerAngles.y;
+        _controller.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, camRotation, 0), _turnSpeed * Time.deltaTime);
+    }
+}
