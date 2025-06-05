@@ -11,7 +11,7 @@
                     "id": "05abe790-59ab-4ae0-866c-5a5d680d2492",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(pressPoint=0.01),Tap(pressPoint=0.1)",
                     "initialStateCheck": true
                 },
                 {
@@ -40,6 +40,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "fe7675ea-b859-496f-a283-7d9ee76cc1fd",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -101,8 +110,8 @@
                 {
                     "name": "",
                     "id": "e3f7022e-8a0e-43b9-bd6d-711eebab9458",
-                    "path": "<Joystick>/stick",
-                    "interactions": "",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "Press(pressPoint=0.01)",
                     "processors": "",
                     "groups": "",
                     "action": "Move",
@@ -133,12 +142,51 @@
                 },
                 {
                     "name": "",
-                    "id": "6e21eb5e-8dc5-42a5-8d8e-f731cb6a48f3",
-                    "path": "<Mouse>/leftButton",
+                    "id": "6499d1e4-bd04-4d2d-a147-4089eafda955",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fb44c3bd-5eb4-4943-9292-99649a66c725",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "DeltaTimeScale,ScaleVector2(x=0.1,y=0.1)",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "a1a80f80-7fcc-47e9-b2f6-da149044cec5",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "36c969e6-612b-44c4-9f14-1566982f6a2e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0c53ab94-c470-4fa7-bb98-b3c37cdf077c",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
