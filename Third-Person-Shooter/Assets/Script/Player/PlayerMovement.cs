@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,12 +19,16 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 _inputs;
     private Vector3 _moveDirection;
+    private PhotonView pv;
 
     #region LifeCycle
 
     private void Awake()
     {
         _inputActions = new PlayerInputs();
+        _cam = FindAnyObjectByType<Camera>();
+        pv = GetComponent<PhotonView>();
+        //Debug.Log(pv.Owner.NickName);
     }
 
     private void OnEnable()
@@ -35,6 +40,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!pv.IsMine) return;
+        Debug.Log($"{pv.Owner.NickName} | IsMine: {pv.IsMine}");
         Movement();
         Gravity();
         PlayerRotation();

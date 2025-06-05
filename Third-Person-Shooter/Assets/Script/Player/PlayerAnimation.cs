@@ -1,20 +1,24 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
+using Photon.Pun;
 
 public class PlayerAnimaition : MonoBehaviour
 {
     [SerializeField] Animator animator;
     PlayerInputs _inputActions;
+    PhotonView pv;
 
     private void Awake()
     {
         _inputActions = new PlayerInputs();
         _inputActions.BasicMovement.Enable();
+        pv = GetComponent<PhotonView>();
     }
 
     private void Update()
     {
+        if (!pv.IsMine) return;
         Move();
     }
 

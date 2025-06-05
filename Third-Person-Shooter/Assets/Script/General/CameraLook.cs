@@ -1,27 +1,38 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using Photon.Pun;
 
 [RequireComponent(typeof(CinemachineCamera))]
 public class CameraLook : MonoBehaviour
 {
-    [Header("References")]
-    CinemachineCamera cinemachine;
-    PlayerInputs playerInputs;
-    [SerializeField] float looksSpeed = 5;
-
-    private void OnEnable()
-    {
-        
-    }
+    CinemachineCamera cam;
+    GameObject[] players;
 
     private void Awake()
     {
-        cinemachine = GetComponent<CinemachineCamera>();
+        cam = GetComponent<CinemachineCamera>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        AttachToPlayer();
+    }
+
+    void AttachToPlayer()
+    {
+        players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject player in players)
+        {
+            ;
+            Debug.Log(player.GetComponent<PhotonView>().IsMine);
+            if (player.GetComponent<PhotonView>().IsMine)
+            {
+                Transform cameraTarget = player.transform.Find("CameraLookAt");
+                if (cameraTarget != null)
+                {
+                    cam.Follow = cameraTarget;
+                }
+            }
+        }
     }
 }
