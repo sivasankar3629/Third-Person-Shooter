@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform _groundCheckTransform;
     private PlayerInputs _inputActions;
     [SerializeField] Camera _cam;
+    [SerializeField] CinemachineCamera _vCam;
 
     [Header("Player Settings")]
     [SerializeField] float _walkSpeed = 3;
@@ -26,9 +28,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         _inputActions = new PlayerInputs();
-        _cam = FindAnyObjectByType<Camera>();
         pv = GetComponent<PhotonView>();
-        //Debug.Log(pv.Owner.NickName);
     }
 
     private void OnEnable()
@@ -37,12 +37,23 @@ public class PlayerMovement : MonoBehaviour
         _inputActions.BasicMovement.Jump.started += Jump;
     }
 
+    void Start()
+    {
+        if (pv.IsMine)
+        {
+            _vCam.gameObject.SetActive(true);
+            _cam.gameObject.SetActive(true);
+        }
+    }
+
+
 
     private void FixedUpdate()
     {
         if (!pv.IsMine) return;
-        Debug.Log($"{pv.Owner.NickName} | IsMine: {pv.IsMine}");
+        //Debug.Log($"{pv.Owner.NickName} | IsMine: {pv.IsMine}");
         Movement();
+        Gravity();
         Gravity();
         PlayerRotation();
 

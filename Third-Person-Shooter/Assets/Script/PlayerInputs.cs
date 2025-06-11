@@ -130,11 +130,29 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Look"",
                     ""type"": ""Value"",
-                    ""id"": ""fe7675ea-b859-496f-a283-7d9ee76cc1fd"",
+                    ""id"": ""89f3935d-9743-453b-b4b7-c8bf2a9defcd"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
-                    ""interactions"": ""Press"",
+                    ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""39dfba49-f43a-446b-a4d2-5609ae607c13"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Scope"",
+                    ""type"": ""Button"",
+                    ""id"": ""4a7d56ed-64af-4d9d-8815-99d812d81eb8"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -206,6 +224,28 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""f6039a95-1bd2-4ed5-b973-edf07fc19899"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""596cf53c-a7fd-42f4-ab9d-1a83c479d37b"",
+                    ""path"": ""<XInputController>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""94658f41-e560-4f58-8c96-710aacab8ca2"",
                     ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
@@ -229,7 +269,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""6499d1e4-bd04-4d2d-a147-4089eafda955"",
-                    ""path"": ""<Keyboard>/r"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -239,12 +279,23 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""fb44c3bd-5eb4-4943-9292-99649a66c725"",
-                    ""path"": ""<Pointer>/delta"",
+                    ""id"": ""2d8835bb-5682-4075-9fa6-8c685876d3ad"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": ""DeltaTimeScale,ScaleVector2(x=0.1,y=0.1)"",
-                    ""groups"": "";Keyboard&Mouse"",
+                    ""processors"": ""ScaleVector2(x=150,y=100)"",
+                    ""groups"": """",
                     ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69361720-0a8b-4ff2-921f-e07f4b1d81e6"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scope"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -288,6 +339,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_BasicMovement_Jump = m_BasicMovement.FindAction("Jump", throwIfNotFound: true);
         m_BasicMovement_Attack = m_BasicMovement.FindAction("Attack", throwIfNotFound: true);
         m_BasicMovement_Look = m_BasicMovement.FindAction("Look", throwIfNotFound: true);
+        m_BasicMovement_Zoom = m_BasicMovement.FindAction("Zoom", throwIfNotFound: true);
+        m_BasicMovement_Scope = m_BasicMovement.FindAction("Scope", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
@@ -377,6 +430,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_BasicMovement_Jump;
     private readonly InputAction m_BasicMovement_Attack;
     private readonly InputAction m_BasicMovement_Look;
+    private readonly InputAction m_BasicMovement_Zoom;
+    private readonly InputAction m_BasicMovement_Scope;
     /// <summary>
     /// Provides access to input actions defined in input action map "BasicMovement".
     /// </summary>
@@ -408,6 +463,14 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "BasicMovement/Look".
         /// </summary>
         public InputAction @Look => m_Wrapper.m_BasicMovement_Look;
+        /// <summary>
+        /// Provides access to the underlying input action "BasicMovement/Zoom".
+        /// </summary>
+        public InputAction @Zoom => m_Wrapper.m_BasicMovement_Zoom;
+        /// <summary>
+        /// Provides access to the underlying input action "BasicMovement/Scope".
+        /// </summary>
+        public InputAction @Scope => m_Wrapper.m_BasicMovement_Scope;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -449,6 +512,12 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @Zoom.started += instance.OnZoom;
+            @Zoom.performed += instance.OnZoom;
+            @Zoom.canceled += instance.OnZoom;
+            @Scope.started += instance.OnScope;
+            @Scope.performed += instance.OnScope;
+            @Scope.canceled += instance.OnScope;
         }
 
         /// <summary>
@@ -475,6 +544,12 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @Zoom.started -= instance.OnZoom;
+            @Zoom.performed -= instance.OnZoom;
+            @Zoom.canceled -= instance.OnZoom;
+            @Scope.started -= instance.OnScope;
+            @Scope.performed -= instance.OnScope;
+            @Scope.canceled -= instance.OnScope;
         }
 
         /// <summary>
@@ -646,6 +721,20 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLook(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Zoom" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnZoom(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Scope" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnScope(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

@@ -1,3 +1,5 @@
+using Photon.Pun;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,28 +15,53 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] ParticleSystem _sandHitEffects;
     [SerializeField] ParticleSystem _metalHitEffects;
     [SerializeField] ParticleSystem _muzzleFlash;
+    [SerializeField] CinemachineCamera _cam;
+    PhotonView pv;
+
+    bool _isScoped = false;
 
     private void Awake()
     {
         _inputActions = new PlayerInputs();
         _inputActions.BasicMovement.Enable();
+        pv = GetComponent<PhotonView>();
     }
 
     private void OnEnable()
     {
         _inputActions.BasicMovement.Attack.started += Attack;
+        _inputActions.BasicMovement.Scope.started += Scope;
     }
 
     private void OnDisable()
     {
         _inputActions.BasicMovement.Attack.started -= Attack;
+        _inputActions.BasicMovement.Scope.started -= Scope;
     }
 
     private void Attack(InputAction.CallbackContext callback)
     {
+        if (!pv.IsMine) return;
         Fire();
+        pv.RPC("Fire", RpcTarget.Others);
     }
 
+    private void Scope(InputAction.CallbackContext context)
+    {
+        if (!pv.IsMine) return;
+        if (_isScoped)
+        {
+            _cam.Lens.FieldOfView = 60f;
+            _isScoped = false;
+        }
+        else
+        {
+            _cam.Lens.FieldOfView = 30f;
+            _isScoped = true;
+        }
+    }
+
+    [PunRPC]
     void Fire()
     {
         _muzzleFlash.Play();

@@ -34,7 +34,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         if ( roomInputField.text.Length > 0 )
         {
-            PhotonNetwork.CreateRoom(roomInputField.text, new RoomOptions() { MaxPlayers = 5 });
+            var roomOptions = new RoomOptions();
+            roomOptions.IsVisible = true;
+            roomOptions.IsOpen = true;
+            roomOptions.MaxPlayers = 5;
+            PhotonNetwork.CreateRoom(roomInputField.text, roomOptions);
         }
     }
 
