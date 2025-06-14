@@ -16,6 +16,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] ParticleSystem _metalHitEffects;
     [SerializeField] ParticleSystem _muzzleFlash;
     [SerializeField] CinemachineCamera _cam;
+    [SerializeField] float DamagePerShot = 40;
     PhotonView pv;
 
     bool _isScoped = false;
@@ -73,32 +74,35 @@ public class PlayerShooting : MonoBehaviour
         if (Physics.Raycast(fireRay, out hit))
         {
             Debug.DrawLine(_fireOrigin.position, hit.point, Color.red, 1f);
-            Debug.Log(hit.collider.name);
+            //Debug.Log(hit.collider.name);
             switch(hit.collider.tag) {
                 case "Sand":
-                    _sandHitEffects.transform.position = hit.point;
-                    _sandHitEffects.Play();
+                    PlayParticles(_sandHitEffects, hit);
                     break;
                 case "Metal":
-                    _metalHitEffects.transform.position = hit.point;
-                    _metalHitEffects.Play();
-                    break;
-                case "Stone":
-                    _stoneHitEffects.transform.position = hit.point;
-                    _stoneHitEffects.Play();
+                    PlayParticles(_metalHitEffects, hit);
                     break;
                 case "Wood":
-                    _woodHitEffects.transform.position = hit.point;
-                    _woodHitEffects.Play();
+                    PlayParticles(_woodHitEffects, hit);
                     break;
                 case "Enemy":
-                    _bloodHitEffects.transform.position = hit.point;
-                    _bloodHitEffects.Play();
-                    Destroy(hit.collider.gameObject,1f);
+                    PlayParticles(_bloodHitEffects, hit);
                     break;
-                default:
+                default: //stone
+                    PlayParticles(_stoneHitEffects, hit);
                     break;
             }
+        }
+    }
+
+    void PlayParticles(ParticleSystem particle, RaycastHit hit)
+    {
+        particle.transform.position = hit.point;
+        particle.Play();
+        IDamagable enemy = hit.transform.GetComponent<IDamagable>();
+        if (enemy != null)
+        {
+            enemy.TakeDamage(DamagePerShot);
         }
     }
 }

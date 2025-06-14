@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33367681713171364}
   - component: {fileID: 23499522727586678}
   - component: {fileID: 64044303418709196}
+  - component: {fileID: 3095415591653047474}
   m_Layer: 0
   m_Name: SM_Prop_Cinderblock_Wall_01
   m_TagString: Stone
@@ -109,3 +110,23 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43472691851480034, guid: 39aad48f8c8d92d43a45e60197d9752c, type: 2}
+--- !u!114 &3095415591653047474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431215749144654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff

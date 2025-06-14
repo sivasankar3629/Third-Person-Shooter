@@ -881,6 +881,7 @@ GameObject:
   - component: {fileID: 64600023010721320}
   - component: {fileID: 64532473909442910}
   - component: {fileID: 64134205427613816}
+  - component: {fileID: 6735761291836975407}
   m_Layer: 0
   m_Name: SM_Veh_Plane_01
   m_TagString: Metal
@@ -1197,6 +1198,26 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43008272442592820, guid: da494ef94d804a74eabeb518bc5895e0, type: 2}
+--- !u!114 &6735761291836975407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499464776196500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &1519795576521016
 GameObject:
   m_ObjectHideFlags: 0

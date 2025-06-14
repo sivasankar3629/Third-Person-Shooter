@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33959235095399294}
   - component: {fileID: 23513596934411974}
   - component: {fileID: 64399208209976692}
+  - component: {fileID: 2355296627572747977}
   m_Layer: 0
   m_Name: SM_Veh_Light_Car_Destroyed_01
   m_TagString: Metal
@@ -109,3 +110,23 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43791171537578784, guid: bf29dfecc77a4cd42a5cc29af4538e84, type: 2}
+--- !u!114 &2355296627572747977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589240936164142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff

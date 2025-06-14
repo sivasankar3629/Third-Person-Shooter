@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33399546295476244}
   - component: {fileID: 23596427592305410}
   - component: {fileID: 64218557540081658}
+  - component: {fileID: 5535027721193732102}
   m_Layer: 0
   m_Name: SM_Env_Port_Boat_Tie_01
   m_TagString: Metal
@@ -109,3 +110,23 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43912375061546154, guid: d18434d0e2ee28945b23347dda903634, type: 2}
+--- !u!114 &5535027721193732102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986833058304084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff

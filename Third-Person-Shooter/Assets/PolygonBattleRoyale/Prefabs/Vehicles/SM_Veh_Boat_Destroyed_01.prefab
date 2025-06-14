@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 64778706656019912}
   - component: {fileID: 64168511009488894}
   - component: {fileID: 64009980282001444}
+  - component: {fileID: -6105602464723408772}
   m_Layer: 0
   m_Name: SM_Veh_Boat_Destroyed_01
   m_TagString: Metal
@@ -155,3 +156,23 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43374911855219632, guid: 657cc48de3264d34589c823fc9f03add, type: 2}
+--- !u!114 &-6105602464723408772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447589186402726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
