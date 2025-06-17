@@ -15,9 +15,10 @@ public class PlayerMovement : MonoBehaviour
     [Header("Player Settings")]
     [SerializeField] float _walkSpeed = 3;
     [SerializeField] float _runSpeed = 6;
-    [SerializeField] float _jumpHeight= 3;
+    [SerializeField] float _jumpHeight = 3;
     [SerializeField] float _gravity = 9.81f;
     [SerializeField] float _turnSpeed = 3;
+    private float verticalVelocity = 0;
 
     private Vector3 _inputs;
     private Vector3 _moveDirection;
@@ -34,7 +35,6 @@ public class PlayerMovement : MonoBehaviour
     private void OnEnable()
     {
         _inputActions.BasicMovement.Enable();
-        _inputActions.BasicMovement.Jump.started += Jump;
     }
 
     void Start()
@@ -52,42 +52,28 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!pv.IsMine) return;
         //Debug.Log($"{pv.Owner.NickName} | IsMine: {pv.IsMine}");
-        Movement();
-        Gravity();
-        Gravity();
+        Move();
         PlayerRotation();
-
-        _controller.Move(_moveDirection * Time.deltaTime);
     }
 
     private void OnDisable()
     {
-        _inputActions.BasicMovement.Jump.started -= Jump;
         _inputActions.BasicMovement.Disable();
     }
 
     #endregion
 
-    private void Movement()
-    {
-        if (_inputActions.BasicMovement.Move.IsInProgress())
-        {
-            Move();
-        }
-        else
-        {
-            _moveDirection.x = 0;
-            _moveDirection.z = 0;
-        }
-    }
 
     private void Move()
     {
         _inputs.z = _inputActions.BasicMovement.Move.ReadValue<Vector2>().y;
         _inputs.x = _inputActions.BasicMovement.Move.ReadValue<Vector2>().x;
 
-        _moveDirection = (transform.right * _inputs.x + transform.forward * _inputs.z + transform.up * _inputs.y) * _runSpeed;
+        _moveDirection = new Vector3(_inputs.x, 0f, _inputs.z) * _runSpeed;
+        _moveDirection.y = Gravity();
+        _moveDirection = transform.TransformDirection(_moveDirection);
 
+        _controller.Move(_moveDirection * Time.fixedDeltaTime);
         #region PC settings
         //if (_inputActions.BasicMovement.Run.IsPressed())
         //{
@@ -100,26 +86,22 @@ public class PlayerMovement : MonoBehaviour
         #endregion
     }
 
-    private void Jump(InputAction.CallbackContext callback)
+    private float Gravity()
     {
-        Debug.Log(transform.up);
         if (IsGrounded())
         {
-            _inputs.y = Mathf.Sqrt(_jumpHeight * _gravity);
-            Debug.Log(_inputs.y);
-        }
-    }
+            verticalVelocity = -2f;
 
-    private void Gravity()
-    {
-        if (IsGrounded())
-        {
-            _moveDirection.y = -2f;
+            if (_inputActions.BasicMovement.Jump.triggered)
+            {
+                verticalVelocity = Mathf.Sqrt(_jumpHeight * _gravity * 2);
+            }
         }
         else
         {
-            _moveDirection.y -= 9.81f * Time.deltaTime  ;
+            verticalVelocity -= _gravity * Time.fixedDeltaTime;
         }
+        return verticalVelocity;
     }
 
     private bool IsGrounded()

@@ -36823,8 +36823,8 @@ MonoBehaviour:
   _groundCheckTransform: {fileID: 8466710949716540898}
   _cam: {fileID: 8302134144594843172}
   _vCam: {fileID: 8809633723385717970}
-  _walkSpeed: 2
-  _runSpeed: 4
+  _walkSpeed: 3
+  _runSpeed: 6
   _jumpHeight: 3
   _gravity: 9.81
   _turnSpeed: 10

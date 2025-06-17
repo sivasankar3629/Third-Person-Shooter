@@ -1959,13 +1959,14 @@ GameObject:
   - component: {fileID: 4273335279901537757}
   - component: {fileID: 3919808450969984450}
   - component: {fileID: -5739096341129406998}
+  - component: {fileID: 5860195789200627482}
   m_Layer: 0
   m_Name: SM_Chr_ZombieBoss_Wretch_01
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1541294811917747888
 Transform:
   m_ObjectHideFlags: 0
@@ -2017,12 +2018,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9808e5364aaaafc48bbc09ac5f138872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 100
   Health: 100
   agent: {fileID: 4273335279901537757}
   animator: {fileID: 0}
   EnemyDeath:
     m_PersistentCalls:
       m_Calls: []
+  dist: 0
 --- !u!136 &2974053295863175811
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2088,6 +2091,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: -5739096341129406998}
+  - {fileID: 5860195789200627482}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -2115,3 +2119,19 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!114 &5860195789200627482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8783199768093254338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
