@@ -40,4 +40,9 @@ public class PlayerAnimaition : MonoBehaviour
         //}
         #endregion
     }
+
+    public void OnPlayerDeath()
+    {
+        animator.SetBool("IsDead", true);
+    }
 }

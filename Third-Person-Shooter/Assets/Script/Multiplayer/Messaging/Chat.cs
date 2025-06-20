@@ -18,7 +18,7 @@ public class Chat : MonoBehaviour
     [PunRPC]
     public void GetMessage(string message)
     {
-        UIManager.Instance.MessageBoxSetActive();
+        MessageUIManager.Instance.MessageBoxSetActive();
         GameObject messageInstance = Instantiate(messagePrefab, Vector3.zero, Quaternion.identity, content.transform);
         messageInstance.GetComponent<Message>().myMessage.text = message;
     }

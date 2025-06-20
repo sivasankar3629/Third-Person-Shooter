@@ -44,7 +44,7 @@ public class PlayerShooting : MonoBehaviour
     {
         if (!pv.IsMine) return;
         Fire();
-        pv.RPC("Fire", RpcTarget.Others);
+        pv.RPC("Fire", RpcTarget.All);
     }
 
     private void Scope(InputAction.CallbackContext context)
@@ -104,5 +104,10 @@ public class PlayerShooting : MonoBehaviour
         {
             enemy.TakeDamage(DamagePerShot);
         }
+    }
+
+    public void OnPlayerDeath()
+    {
+        _inputActions.BasicMovement.Disable();
     }
 }

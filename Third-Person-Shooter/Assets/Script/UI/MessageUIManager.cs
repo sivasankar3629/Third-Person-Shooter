@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class MessageUIManager : MonoBehaviour
 {
-    public static UIManager Instance;
+    public static MessageUIManager Instance;
 
     [SerializeField] GameObject messageBox;
     [SerializeField] GameObject chatButton;

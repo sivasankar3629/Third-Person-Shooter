@@ -1,3 +1,4 @@
+using System.Collections;
 using Photon.Pun;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] CharacterController _controller;
     [SerializeField] Transform _groundCheckTransform;
     private PlayerInputs _inputActions;
+    [SerializeField] InputActionReference _jumpAction;
     [SerializeField] Camera _cam;
     [SerializeField] CinemachineCamera _vCam;
 
@@ -46,13 +48,16 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
-
     private void FixedUpdate()
     {
         if (!pv.IsMine) return;
         //Debug.Log($"{pv.Owner.NickName} | IsMine: {pv.IsMine}");
         Move();
+    }
+
+    private void LateUpdate()
+    {
+        if (!pv.IsMine) return;
         PlayerRotation();
     }
 
@@ -66,6 +71,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
+        if (!_controller.enabled) return;
         _inputs.z = _inputActions.BasicMovement.Move.ReadValue<Vector2>().y;
         _inputs.x = _inputActions.BasicMovement.Move.ReadValue<Vector2>().x;
 
@@ -92,8 +98,9 @@ public class PlayerMovement : MonoBehaviour
         {
             verticalVelocity = -2f;
 
-            if (_inputActions.BasicMovement.Jump.triggered)
+            if (_jumpAction.action.triggered)
             {
+                Debug.Log("Jump Pressed");
                 verticalVelocity = Mathf.Sqrt(_jumpHeight * _gravity * 2);
             }
         }
@@ -113,5 +120,24 @@ public class PlayerMovement : MonoBehaviour
     {
         float camRotation = _cam.transform.rotation.eulerAngles.y;
         _controller.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, camRotation, 0), _turnSpeed * Time.deltaTime);
+    }
+
+    void StopInput()
+    {
+        if (!pv.IsMine) return;
+        _inputActions.BasicMovement.Disable();
+    }
+
+    public void OnPlayerDeath()
+    {
+        StopInput();
+        //_controller.enabled = false;
+        StartCoroutine(DestroyPlayer());
+    }
+
+    IEnumerator DestroyPlayer()
+    {
+        yield return new WaitForSeconds(4f);
+        Destroy(gameObject);
     }
 }
