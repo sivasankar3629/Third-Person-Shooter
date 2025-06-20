@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,6 +18,9 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] ParticleSystem _muzzleFlash;
     [SerializeField] CinemachineCamera _cam;
     [SerializeField] float DamagePerShot = 40;
+    int totalBullets = 90;
+    int extraBullets = 60;
+    int bullets = 30;
     PhotonView pv;
 
     bool _isScoped = false;
@@ -43,7 +47,14 @@ public class PlayerShooting : MonoBehaviour
     private void Attack(InputAction.CallbackContext callback)
     {
         if (!pv.IsMine) return;
+        if (bullets < 1)
+        {
+            StartCoroutine(Reload());
+        }
+        if (bullets < 1) return;
         Fire();
+        bullets--;
+        GeneralUIManager.Instance.UpdateBullet(bullets);
         pv.RPC("Fire", RpcTarget.All);
     }
 
@@ -93,6 +104,28 @@ public class PlayerShooting : MonoBehaviour
                     break;
             }
         }
+    }
+
+    IEnumerator Reload()
+    {
+        GeneralUIManager.Instance.reloadingText.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        if (totalBullets >= 30)
+        {
+            extraBullets = totalBullets - 30;
+            GeneralUIManager.Instance.UpdateRemainingBullets(extraBullets);
+            bullets = 30;
+            GeneralUIManager.Instance.UpdateBullet(bullets);
+        }
+        else if (totalBullets < 30)
+        {
+            bullets = extraBullets + bullets;
+            GeneralUIManager.Instance.UpdateBullet(bullets);
+            extraBullets = 0;
+            GeneralUIManager.Instance.UpdateRemainingBullets(extraBullets);
+        }
+        GeneralUIManager.Instance.reloadingText.SetActive(false);
+
     }
 
     void PlayParticles(ParticleSystem particle, RaycastHit hit)
