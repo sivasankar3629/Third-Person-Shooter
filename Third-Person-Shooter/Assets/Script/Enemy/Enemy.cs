@@ -145,6 +145,8 @@ public abstract class Enemy : MonoBehaviour, IDamagable
 
     public void OnEnemyDeath()
     {
+        EnemySpawner.Instance.pv.RPC("AddToQueue", RpcTarget.All, GetComponent<PhotonView>().ViewID);
+        return;
         animator.SetBool("IsDead", true);
         StartCoroutine(OnDeath());
     }
@@ -152,7 +154,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     IEnumerator OnDeath()
     {
         yield return new WaitForSeconds(4f);
-        EnemySpawner.Instance.pv.RPC("AddToQueue", RpcTarget.All, GetComponent<PhotonView>().ViewID);
+        
     }
 
 }

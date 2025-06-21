@@ -18,6 +18,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] ParticleSystem _muzzleFlash;
     [SerializeField] CinemachineCamera _cam;
     [SerializeField] float DamagePerShot = 40;
+    float score = 0;
     int totalBullets = 90;
     int extraBullets = 60;
     int bullets = 30;
@@ -130,17 +131,38 @@ public class PlayerShooting : MonoBehaviour
 
     void PlayParticles(ParticleSystem particle, RaycastHit hit)
     {
+        if (particle == null)
+        {
+            Debug.Log("Particle system is null.");
+            return;
+        }
         particle.transform.position = hit.point;
         particle.Play();
-        IDamagable enemy = hit.transform.GetComponent<IDamagable>();
-        if (enemy != null)
+        IDamagable damagable = hit.transform.GetComponent<IDamagable>();
+        if (damagable != null)
         {
-            enemy.TakeDamage(DamagePerShot);
+            Enemy enemy = hit.collider.GetComponent<Enemy>();
+            float approxHealth = enemy.Health;
+            damagable.TakeDamage(DamagePerShot);
+
+            if (approxHealth <= DamagePerShot)
+            {
+                score++;
+                //score -= 0.5f;
+                GeneralUIManager.Instance.UpdateScoreText(score);
+            }
         }
+    }
+    void StopInput()
+    {
+        if (!pv.IsMine) return;
+        _inputActions.BasicMovement.Disable();
     }
 
     public void OnPlayerDeath()
     {
-        _inputActions.BasicMovement.Disable();
+        StopInput();
+        GeneralUIManager.Instance.UpdatePlayerDeath();
+        GameOverUIManager.Instance.UpdateScoreText(score);
     }
 }

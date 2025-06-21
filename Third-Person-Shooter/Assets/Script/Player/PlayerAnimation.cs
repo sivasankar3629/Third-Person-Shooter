@@ -40,9 +40,15 @@ public class PlayerAnimaition : MonoBehaviour
         //}
         #endregion
     }
+    void StopInput()
+    {
+        if (!pv.IsMine) return;
+        _inputActions.BasicMovement.Disable();
+    }
 
     public void OnPlayerDeath()
     {
+        StopInput();
         animator.SetBool("IsDead", true);
     }
 }

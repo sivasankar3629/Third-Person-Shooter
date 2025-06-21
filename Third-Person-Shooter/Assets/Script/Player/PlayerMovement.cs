@@ -132,12 +132,13 @@ public class PlayerMovement : MonoBehaviour
     {
         StopInput();
         //_controller.enabled = false;
-        StartCoroutine(DestroyPlayer());
+        //StartCoroutine(DestroyPlayer());
     }
 
     IEnumerator DestroyPlayer()
     {
         yield return new WaitForSeconds(4f);
+        GeneralUIManager.Instance.UpdatePlayerDeath();
         Destroy(gameObject);
     }
 }
