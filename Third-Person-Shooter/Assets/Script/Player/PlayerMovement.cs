@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] InputActionReference _jumpAction;
     [SerializeField] Camera _cam;
     [SerializeField] CinemachineCamera _vCam;
+    [SerializeField] GameObject _miniMapCam;
 
     [Header("Player Settings")]
     [SerializeField] float _walkSpeed = 3;
@@ -45,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
         {
             _vCam.gameObject.SetActive(true);
             _cam.gameObject.SetActive(true);
+            _miniMapCam.gameObject.SetActive(true);
         }
     }
 
