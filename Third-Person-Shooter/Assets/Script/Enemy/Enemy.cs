@@ -36,7 +36,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     {
         Health = maxHealth;
         wayPoints = EnemySpawner.Instance.GetWaypoints();
-        Debug.Log("wayPoints.Length");
+        wayPoints = EnemySpawner.Instance.GetWaypoints();
         pv = GetComponent<PhotonView>();
         if (!PhotonNetwork.IsMasterClient) return;
         StartCoroutine(CallStartPatrolSafely());
