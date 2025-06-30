@@ -53,58 +53,85 @@ public class PlayerShooting : MonoBehaviour
             StartCoroutine(Reload());
         }
         if (bullets < 1) return;
-        Fire();
         bullets--;
         GeneralUIManager.Instance.UpdateBullet(bullets);
-        pv.RPC("Fire", RpcTarget.All);
+
+        // Firing
+        Vector3 fireDirection = _fireTarget.position - _fireOrigin.position;
+        Ray fireRay = new Ray(_fireOrigin.position, fireDirection);
+
+        if (Physics.Raycast(fireRay, out RaycastHit hit))
+        {
+            Debug.DrawLine(_fireOrigin.position, hit.point, Color.red, 1f);
+            string hitTag = hit.collider.tag;
+
+            IDamagable damagable = hit.transform.GetComponent<IDamagable>();
+            if (damagable != null)
+            {
+                Enemy enemy = hit.collider.GetComponent<Enemy>();
+                float approxHealth = enemy.Health;
+                damagable.TakeDamage(DamagePerShot);
+
+                if (approxHealth <= DamagePerShot)
+                {
+                    score++;
+                    GeneralUIManager.Instance.UpdateScoreText(score);
+                }
+            }
+            pv.RPC(nameof(FireRPC), RpcTarget.All, hit.point, hit.normal, hitTag);
+        }
+
     }
 
     private void Scope(InputAction.CallbackContext context)
     {
         if (!pv.IsMine) return;
-        if (_isScoped)
-        {
-            _cam.Lens.FieldOfView = 60f;
-            _isScoped = false;
-        }
-        else
-        {
-            _cam.Lens.FieldOfView = 30f;
-            _isScoped = true;
-        }
+        _cam.Lens.FieldOfView = _isScoped ? 60f : 30f;
+        _isScoped = !_isScoped;
+
     }
 
     [PunRPC]
-    void Fire()
+    void FireRPC(Vector3 point, Vector3 normal, string tag)
     {
         _muzzleFlash.Play();
-
-        Vector3 fireDirection = _fireTarget.position - _fireOrigin.position;
-        Ray fireRay = new Ray(_fireOrigin.position, fireDirection);
-        RaycastHit hit;
-
-        if (Physics.Raycast(fireRay, out hit))
-        {
-            Debug.DrawLine(_fireOrigin.position, hit.point, Color.red, 1f);
-            //Debug.Log(hit.collider.name);
-            switch(hit.collider.tag) {
-                case "Sand":
-                    PlayParticles(_sandHitEffects, hit);
-                    break;
-                case "Metal":
-                    PlayParticles(_metalHitEffects, hit);
-                    break;
-                case "Wood":
-                    PlayParticles(_woodHitEffects, hit);
-                    break;
-                case "Enemy":
-                    PlayParticles(_bloodHitEffects, hit);
-                    break;
-                default: //stone
-                    PlayParticles(_stoneHitEffects, hit);
-                    break;
-            }
+        switch(tag) {
+            case "Sand":
+                PlayParticles(_sandHitEffects, point, normal);
+                break;
+            case "Metal":
+                PlayParticles(_metalHitEffects, point, normal);
+                break;
+            case "Wood":
+                PlayParticles(_woodHitEffects, point, normal);
+                break;
+            case "Enemy":
+                PlayParticles(_bloodHitEffects, point, normal);
+                 break;
+            default: //stone
+                PlayParticles(_stoneHitEffects, point, normal);
+                break;
         }
+        
+    }
+
+    void PlayParticles(ParticleSystem particle, Vector3 point, Vector3 normal)
+    {
+        if (particle == null)
+        {
+            Debug.Log("Particle system is null.");
+            return;
+        }
+        particle.transform.position = point;
+        particle.transform.rotation = Quaternion.LookRotation(normal);
+        particle.Play();
+
+    }
+
+    void StopInput()
+    {
+        if (!pv.IsMine) return;
+        _inputActions.BasicMovement.Disable();
     }
 
     IEnumerator Reload()
@@ -128,37 +155,6 @@ public class PlayerShooting : MonoBehaviour
         GeneralUIManager.Instance.reloadingText.SetActive(false);
 
     }
-
-    void PlayParticles(ParticleSystem particle, RaycastHit hit)
-    {
-        if (particle == null)
-        {
-            Debug.Log("Particle system is null.");
-            return;
-        }
-        particle.transform.position = hit.point;
-        particle.Play();
-        IDamagable damagable = hit.transform.GetComponent<IDamagable>();
-        if (damagable != null)
-        {
-            Enemy enemy = hit.collider.GetComponent<Enemy>();
-            float approxHealth = enemy.Health;
-            damagable.TakeDamage(DamagePerShot);
-
-            if (approxHealth <= DamagePerShot)
-            {
-                score++;
-                //score -= 0.5f;
-                GeneralUIManager.Instance.UpdateScoreText(score);
-            }
-        }
-    }
-    void StopInput()
-    {
-        if (!pv.IsMine) return;
-        _inputActions.BasicMovement.Disable();
-    }
-
     public void OnPlayerDeath()
     {
         StopInput();
