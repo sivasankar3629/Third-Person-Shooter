@@ -4,15 +4,17 @@ using Photon.Pun;
 using System.Collections;
 using System.Threading.Tasks;
 
-public class PingScipt : MonoBehaviour, IPingWheelReleaseAction
+public abstract class PingScipt : MonoBehaviour
 {
     Camera cam;
-    GameObject[] _ping;
+    PhotonView pv; 
     Queue<GameObject> _pingQueue;
     [SerializeField] GameObject PingPrefab;
+    RaycastHit hit;
 
-    private void Start()
+    private void Awake()
     {
+        pv = GetComponent<PhotonView>();
         Init();
     }
 
@@ -26,37 +28,42 @@ public class PingScipt : MonoBehaviour, IPingWheelReleaseAction
         _pingQueue = new Queue<GameObject>();
         for (int i = 0; i < 3; i++)
         {
-            GameObject go = Instantiate(PingPrefab, Vector3.zero, Quaternion.identity);
-            _pingQueue.Enqueue(go);
+            GameObject go = PhotonNetwork.Instantiate(PingPrefab.name, Vector3.zero, Quaternion.identity);
             go.SetActive(false);
+            _pingQueue.Enqueue(go);
         }
     }
 
-    internal void Ping(Queue<GameObject> pingQueue)
+    internal void Ping()
     {
-        RaycastHit hit;
-        cam= Camera.main;
-        Physics.Raycast(cam.gameObject.transform.position, cam.transform.forward, out hit, 500);
-        Debug.DrawLine(cam.transform.position, hit.point, Color.red, 2f);
-        ActivatePing(hit.point, pingQueue);
+        cam = Camera.main;
+        if (Physics.Raycast(cam.gameObject.transform.position, cam.transform.forward, out hit, 500))
+        {
+            Debug.DrawLine(cam.transform.position, hit.point, Color.red, 2f);
+            pv.RPC(nameof(ActivatePing), RpcTarget.All, hit.point);
+        }   
     }
 
-    public void PingWheelReleaseAction()
+    [PunRPC]
+    internal async void ActivatePing(Vector3 pingPosition)
     {
-        Ping(_pingQueue);
-    }
+        if (_pingQueue.Count == 0)
+        {
+            Debug.Log("Ping Limit Reached or Queue Not Ready");
+            return;
+        }
 
-    internal async void ActivatePing(Vector3 pingPosition, Queue<GameObject> pingQueue)
-    {
-        if (pingQueue.Count == 0) { Debug.Log("Ping Limit Reached"); }
-        GameObject go = pingQueue.Dequeue();
+        GameObject go = _pingQueue.Dequeue();
+        if (go == null) return;
+
         go.transform.position = pingPosition + new Vector3(0,1,0);
         go.SetActive(true);
         
         await Task.Delay(5000);
 
+        if (go == null) return ;
         go.SetActive(false);
-        pingQueue.Enqueue(go);
+        _pingQueue.Enqueue(go);
     }
 
 
